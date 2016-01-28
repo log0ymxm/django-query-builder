@@ -1,7 +1,8 @@
 from copy import deepcopy
 
 from django.db import connection as default_django_connection
-from django.db.models import Q, get_model
+from django.db.models import Q
+from django.apps import apps
 from django.db.models.query import QuerySet
 from django.db.models.constants import LOOKUP_SEP
 import six
@@ -1796,7 +1797,7 @@ class QueryBuilderQuerySet(QuerySet):
         if self.Meta is not None and model is None and hasattr(self.Meta, 'model'):
             model = self.Meta.model
             if isinstance(model, str):
-                model = get_model(*model.split('.', 1))
+                model = apps.get_model(*model.split('.', 1))
         super(QueryBuilderQuerySet, self).__init__(model, query, using, **kwargs)
         self._queryset = self.model.objects.get_queryset()
 
